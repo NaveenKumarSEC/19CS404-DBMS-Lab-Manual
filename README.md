@@ -1,232 +1,221 @@
-# Experiment 3: DML Commands
+# Experiment 4: Aggregate Functions, Group By and Having Clause
 
 ## AIM
-To study and implement DML (Data Manipulation Language) commands.
+To study and implement aggregate functions, GROUP BY, and HAVING clause with suitable examples.
 
 ## THEORY
 
-### 1. INSERT INTO
-Used to add records into a relation.
-These are three type of INSERT INTO queries which are as
-A)Inserting a single record
-**Syntax (Single Row):**
-```sql
-INSERT INTO table_name (field_1, field_2, ...) VALUES (value_1, value_2, ...);
-```
-**Syntax (Multiple Rows):**
-```sql
-INSERT INTO table_name (field_1, field_2, ...) VALUES
-(value_1, value_2, ...),
-(value_3, value_4, ...);
-```
-**Syntax (Insert from another table):**
-```sql
-INSERT INTO table_name SELECT * FROM other_table WHERE condition;
-```
-### 2. UPDATE
-Used to modify records in a relation.
-Syntax:
-```sql
-UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
-```
-### 3. DELETE
-Used to delete records from a relation.
-**Syntax (All rows):**
-```sql
-DELETE FROM table_name;
-```
-**Syntax (Specific condition):**
-```sql
-DELETE FROM table_name WHERE condition;
-```
-### 4. SELECT
-Used to retrieve records from a table.
+### Aggregate Functions
+These perform calculations on a set of values and return a single value.
+
+- **MIN()** – Smallest value  
+- **MAX()** – Largest value  
+- **COUNT()** – Number of rows  
+- **SUM()** – Total of values  
+- **AVG()** – Average of values
+
 **Syntax:**
 ```sql
-SELECT column1, column2 FROM table_name WHERE condition;
+SELECT AGG_FUNC(column_name) FROM table_name WHERE condition;
 ```
+### GROUP BY
+Groups records with the same values in specified columns.
+**Syntax:**
+```sql
+SELECT column_name, AGG_FUNC(column_name)
+FROM table_name
+GROUP BY column_name;
+```
+### HAVING
+Filters the grouped records based on aggregate conditions.
+**Syntax:**
+```sql
+SELECT column_name, AGG_FUNC(column_name)
+FROM table_name
+GROUP BY column_name
+HAVING condition;
+```
+
 **Question 1**
+How many patients have expired insurance coverage for each insurance company?
 
-Decrease the reorder level by 30 percent where the product name contains 'cream' and quantity in stock is higher than reorder level in the products table.
+Sample table:Insurance Table
+![Screenshot (99)](https://github.com/user-attachments/assets/fe94df68-cb38-4201-8d85-3a04b34fafa1)
 
-![Screenshot (104)](https://github.com/user-attachments/assets/6e518ec5-0d22-40c0-bc0c-7248e8931784)
+select InsuranceCompany,count(*) as TotalExpiredPatients
 
-update PRODUCTS
+from Insurance
 
-set reorder_lvl=reorder_lvl*0.7
+group by InsuranceCompany;
 
-where product_name like '%cream%'
-
-and quantity>reorder_lvl;
 
 **Output:**
 
-![Screenshot (105)](https://github.com/user-attachments/assets/a9d3f9ea-1560-41bf-b824-47167887e375)
+![Screenshot (100)](https://github.com/user-attachments/assets/f6876a60-51ea-4680-9b7e-a16757f199b7)
 
 
 **Question 2**
-Write a SQL statement to Update the address to '58 Lakeview, Magnolia' where supplier ID is 5 in the suppliers table.
 
-![Screenshot (106)](https://github.com/user-attachments/assets/203d15b0-ca4b-4ba6-b2e2-9961d5524bb3)
+How many prescriptions were written by each doctor?
+Sample tablePrescriptions Table
 
-update Suppliers
+![Screenshot (101)](https://github.com/user-attachments/assets/04f6765b-bc34-4ba2-a545-d088976a3190)
 
-set address= '58 Lakeview, Magnolia'
+SELECT DoctorID,count(*) as TotalPrescriptions
 
-where supplier_id=5;
+from Prescriptions
+
+group by DoctorID;
+
 
 **Output:**
 
-![Screenshot (107)](https://github.com/user-attachments/assets/dc261721-38fe-4697-b049-b965f72084d4)
+![Screenshot (102)](https://github.com/user-attachments/assets/d1852b8d-7935-4281-b85e-b1dddfad7197)
 
 
 **Question 3**
 
-Write a SQL statement to Increase the selling price by 15% in the products table where quantity in stock is less than 50 and supplier ID is 10.
+What is the total number of appointments scheduled by each doctor?
 
-![Screenshot (108)](https://github.com/user-attachments/assets/5c21396d-1c41-4492-ab82-77e1fe8a1608)
+Sample table:Appointments Table
 
-update Products
-
-set sell_price=sell_price*1.15
-
-where quantity<50
-
-and supplier_id=10;
-
+![Screenshot (103)](https://github.com/user-attachments/assets/4935a868-df50-4e86-acd5-6d22f69e861b)
 
 **Output:**
 
-![Screenshot (109)](https://github.com/user-attachments/assets/00cc0731-6b6b-4e89-9025-4ee06f4dfb09)
+![image](https://github.com/user-attachments/assets/0a549ace-e896-4397-88e2-a63e0aa06f62)
 
 
 **Question 4**
 
-For  Increase the selling price per unit by 3 for all products supplied by supplier ID 4 in the sales table.
+Write a SQL query to find the Fruit with the lowest available quantity.
 
-![Screenshot (110)](https://github.com/user-attachments/assets/86fa964a-f305-4b87-a49c-0ce79c1a5a23)
+![image](https://github.com/user-attachments/assets/ec9e01ee-cb01-4ad2-800d-1816eb3b26c2)
 
-update Products
+select name as fruit_name , min(inventory) as lowest_quantity
 
-set sell_price=sell_price*1.15
-
-where quantity<50
-
-and supplier_id=10;
-
+from fruits;
 
 **Output:**
 
-![Screenshot (111)](https://github.com/user-attachments/assets/4840874f-663e-4619-86f8-e28c2403249b)
+
+![image](https://github.com/user-attachments/assets/0204804f-612f-4252-b512-27c0a8b0a6d7)
 
 
 **Question 5**
 
-For  Increase the selling price per unit by 3 for all products supplied by supplier ID 4 in the sales table.
+Write a SQL query to calculate total available amount of fruits that has a price greater than 0.5 . Return total Count. 
 
-![Screenshot (112)](https://github.com/user-attachments/assets/05b68bb7-3fff-434b-ae1b-23e886199fd9)
+Note: Inventory attribute contains amount of fruits
 
-update SALES
 
-set sell_price=sell_price+3
+![image](https://github.com/user-attachments/assets/fecec400-4e63-44ec-a54a-d0c5e0dfc04f)
 
-where product_id in(select product_id
+select sum(inventory) as total_available_amount
 
-from PRODUCTS
+from fruits
 
-where supplier_id=4
-);
-
+where price>0.5;
 
 **Output:**
 
-![Screenshot (113)](https://github.com/user-attachments/assets/6d945d6b-ce75-4272-abd3-0d9b6a3bea2d)
-
+![image](https://github.com/user-attachments/assets/0e1afba4-9aee-4cc3-90b8-0cc8c04294fd)
 
 **Question 6**
 
-Write a SQL statement to Double the salary for employees in department 20 who have a job_id ending with 'MAN'
+Write a SQL query to  find the average salary of all employees?
 
-![Screenshot (114)](https://github.com/user-attachments/assets/26784174-1330-4bc0-bd3e-a6c08ba833f9)
 
-UPDATE Employees
+![image](https://github.com/user-attachments/assets/ecb34cbc-f30c-49f1-af27-f9ff4ab4602e)
+`
+select avg(income) as Average_Salary
 
-set salary=salary*2
-
-where department_id=20
-
-and job_id like '%MAN';
-
+from employee;
 
 **Output:**
 
-![Screenshot (115)](https://github.com/user-attachments/assets/8df38546-62f7-4ab3-a2dd-90f7ab0d0889)
+
+![image](https://github.com/user-attachments/assets/2da9bb45-675a-483a-8027-86a1ca7cb6cc)
 
 
 **Question 7**
 
-Write a SQL query to Delete a Specific Surgery which was made on 28th Feb 2024.
+Write a SQL query to determine the number of customers who received at least one grade for their activity.
 
-![Screenshot (116)](https://github.com/user-attachments/assets/763d66e5-ef23-41f1-ad94-dc958b78bc57)
 
-delete from Surgeries
+![image](https://github.com/user-attachments/assets/c413d6c9-76f1-4133-9406-5e8925e4c2b0)
 
-where surgery_date='2024-02-28';
+SELECT COUNT(customer_id) AS COUNT
 
+FROM customer
+
+where grade is not null;
 
 **Output:**
 
-![Screenshot (117)](https://github.com/user-attachments/assets/c5fde552-7a1f-4fac-8dcf-587597b4410c)
+
+![image](https://github.com/user-attachments/assets/46ecfb3c-4382-48c0-abec-c48845b90daa)
+
 
 **Question 8**
 
-Write a SQL query to Delete customers from 'customer' table where 'CUST_CITY' is not 'New York' and 'OUTSTANDING_AMT' is greater than 5000.
+Write the SQL query that accomplishes the selection of total cost of all products in each category from the "products" table and includes only those products where the total cost is greater than 50.
 
-![Screenshot (118)](https://github.com/user-attachments/assets/ce497207-8f15-4929-8681-cad0df62bf5a)
 
-delete from Customer
+![image](https://github.com/user-attachments/assets/f0ed5434-0a3e-4c0b-9a95-3a6de1265359)
 
-where CUST_CITY!='New York'
+select category_id,sum(price) as Total_Cost
 
-and OUTSTANDING_AMT>5000;
+from products
+
+group by category_id
+
+having Total_Cost>50;
+
 
 **Output:**
 
-![Screenshot (119)](https://github.com/user-attachments/assets/4aab5d15-b963-4853-87ed-6b5b55073787)
+
+![image](https://github.com/user-attachments/assets/a26e2ca9-5a4e-4821-aaa2-e954e60ed2cd)
 
 
 **Question 9**
 
-Write a SQL query to Delete all Doctors whose Specialization is either 'Pediatrics' or 'Cardiology' and Last Name is Brown.
+Write a SQL query to find the difference between the maximum and minimum price of fruits?
 
-![Screenshot (120)](https://github.com/user-attachments/assets/14c8cd5f-8a85-452b-8963-598f0d375646)
 
-delete from Doctors
+![image](https://github.com/user-attachments/assets/50b4425e-f1e0-46a3-8042-683c97701287)
 
-where Specialization in ('Pediatrics','Cardiology')
+select (max(price)-min(price)) as price_diff
 
-and last_name like '%Brown%';
+from fruits;
 
 
 **Output:**
 
-![Screenshot (121)](https://github.com/user-attachments/assets/ce2d8eb3-63e6-4479-967b-ad0de44c5ba9)
+
+![image](https://github.com/user-attachments/assets/58551863-741a-4725-8727-48484a23f782)
+
 
 **Question 10**
 
-Write a SQL query to Delete customers from 'customer' table where 'GRADE' is greater than or equal to 2.
+Write a SQL query to find the average length of names for people living in Chennai?
 
-![Screenshot (122)](https://github.com/user-attachments/assets/3292d209-8ebe-4561-b182-ce643eeb86a9)
 
-delete from Customer
+![image](https://github.com/user-attachments/assets/b2734a29-fd4a-42c0-b5bc-b0546b9db332)
 
-where GRADE>=2;
+select avg(length(name)) as avg_name_length
 
+from customer
+
+where city like '%Chennai%';
 
 **Output:**
 
-![Screenshot (123)](https://github.com/user-attachments/assets/b7341336-f945-4181-806f-9e96dfbe9392)
+
+![image](https://github.com/user-attachments/assets/f74034bd-6685-48c2-a36b-789a47c1f104)
+
 
 
 ## RESULT
-Thus, the SQL queries to implement DML commands have been executed successfully.
+Thus, the SQL queries to implement aggregate functions, GROUP BY, and HAVING clause have been executed successfully.
